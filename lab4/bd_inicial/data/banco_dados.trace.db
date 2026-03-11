@@ -1,0 +1,3 @@
+2026-03-11 11:17:15.582431Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "PACIENTE" not found; SQL statement:
+insert into paciente (id, nome)values(?,?) [42102-240]

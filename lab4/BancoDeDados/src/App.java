@@ -12,7 +12,7 @@ public class App {
 
         System.out.println("\n[+] Inserindo dados...");
         createAluno("Luis", "Sistemas de Informação");
-        createMatricula(1, "2026.1"); // Assumindo que o Luis será o ID 1
+        createMatricula(1, "2026.1");
         createMatricula(1, "2026.2");
 
         System.out.println("\n[+] Lendo o banco de dados...");
@@ -61,27 +61,32 @@ public class App {
         }
     }
 
-    public static void read() throws Exception {
-        // Fazendo um JOIN para trazer o aluno e a matrícula na mesma consulta
-        String sql = "SELECT a.id, a.nome, a.curso, m.semestre " +
-                     "FROM Aluno a LEFT JOIN Matricula m ON a.id = m.aluno_id " +
-                     "ORDER BY a.id";
-                     
+   public static void read() throws Exception {
         try (Connection con = getConnection();
-             Statement stmt = con.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
+             Statement stmt = con.createStatement()) {
             
             System.out.println("--------------------------------------------------");
-            while (rs.next()) {
-                int id = rs.getInt("id");
-                String nome = rs.getString("nome");
-                String curso = rs.getString("curso");
-                String semestre = rs.getString("semestre");
-                
-                String sem = (semestre != null) ? semestre : "Sem matrícula";
-                System.out.println("ID: " + id + " | Aluno: " + nome + " | Curso: " + curso + " | Semestre: " + sem);
+            System.out.println("--- LISTA DE ALUNOS ---");
+            String sqlAluno = "SELECT * FROM Aluno";
+            ResultSet rsAluno = stmt.executeQuery(sqlAluno);
+            
+            while (rsAluno.next()) {
+                System.out.println("ID Aluno: " + rsAluno.getInt("id") + 
+                                   " | Nome: " + rsAluno.getString("nome") + 
+                                   " | Curso: " + rsAluno.getString("curso"));
+            }
+
+            System.out.println("\n--- LISTA DE MATRÍCULAS ---");
+            String sqlMatricula = "SELECT * FROM Matricula";
+            ResultSet rsMatricula = stmt.executeQuery(sqlMatricula);
+            
+            while (rsMatricula.next()) {
+                System.out.println("ID Matrícula: " + rsMatricula.getInt("id") + 
+                                   " | ID do Aluno: " + rsMatricula.getInt("aluno_id") + 
+                                   " | Semestre: " + rsMatricula.getString("semestre"));
             }
             System.out.println("--------------------------------------------------");
+            
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
